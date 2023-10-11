@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Listing</title>
+    <style>
+        /* Basic styles for header and footer */
+        header, footer {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 15px;
+        }
+
+        body {
+            background-image: url('https://img.freepik.com/free-vector/hand-painted-watercolor-pastel-sky-background_23-2148902771.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+
+        /* Styles for product cards */
+        .product-card {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin: 10px;
+            padding: 15px;
+            width: calc(50% - 20px); /* Calculate the width for two slides per row with margin */
+            display: inline-block;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .product-card img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .product-description {
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+        /* Cart button styles */
+        .cart-button {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 15px 24px;
+            cursor: pointer;
+            z-index: 1;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .cart-button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Cart styles */
+        .cart {
+            position: fixed;
+            top: 60px;
+            right: 10px;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 15px;
+            display: none;
+            z-index: 1;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            max-width: 200px;
+        }
+
+        .cart h2 {
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .cart ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .cart li {
+            margin-bottom: 5px;
+            font-size: 14px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .cart-total {
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .remove-button {
+            background-color: #ff6666;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 8px 13px;
+            cursor: pointer;
+        }
+
+        .remove-button:hover {
+            background-color: #ff3333;
+        }
+
+        /* Buy button styles */
+        .buy-button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+
+        .buy-button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Display two slides per row */
+        .product-row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between; /* Add this line to evenly space the slides */
+        }
+
+        /* Navigation buttons */
+        .navigation-buttons {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .navigation-button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+            margin: 5px;
+        }
+
+        /* Input fields for address, phone number, and name */
+        input[type="text"],
+        input[type="tel"] {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>HOME APPLIANCES</h1>
+    </header>
+
+    <button class="cart-button" id="cartButton">Cart</button>
+
+    <main>
+        <section id="productList">
+            <!-- Products will be displayed here -->
+            <div class="product-row" id="productRow">
+                <!-- Example product cards -->
+            </div>
+            <div class="navigation-buttons">
+                <button class="navigation-button" id="prevButton">Previous</button>
+                <button class="navigation-button" id="nextButton">Next</button>
+            </div>
+        </section>
+    </main>
+
+    <div class="cart" id="shoppingCart">
+        <h2>Shopping Cart</h2>
+        <ul id="cartItems">
+            <!-- Cart items will be displayed here -->
+        </ul>
+        <p class="cart-total">Total: $0.00</p>
+
+        <!-- Input fields for address, phone number, and name -->
+        <label for="address">Address:</label>
+        <input type="text" id="address" placeholder="Enter your address">
+        
+        <label for="phoneNumber">Phone Number:</label>
+        <input type="tel" id="phoneNumber" placeholder="Enter your phone number">
+        
+        <label for="fullName">Full Name:</label>
+        <input type="text" id="fullName" placeholder="Enter your full name">
+        
+        <button class="order-button" id="placeOrderButton">Place Order</button>
+    </div>
+
+    <footer>
+        <p>&copy; 2023 Product Listing</p>
+    </footer>
+
+    <script>
+        const productList = document.getElementById('productList');
+        const productRow = document.getElementById('productRow');
+        const shoppingCart = document.getElementById('shoppingCart');
+        const cartButton = document.getElementById('cartButton');
+        const cartItems = document.getElementById('cartItems');
+        const cartTotal = document.querySelector('.cart-total');
+
+        let cart = []; // Array to store cart items
+        let currentIndex = 0;
+
+        // Sample product data (you can replace this with actual data from a database)
+        const products = [
+            {
+                name: 'AC',
+                image: 'https://www.91-cdn.com/hub/wp-content/uploads/2023/03/Best-AC-brands-in-India.jpg',
+                price: 1400,
+                description: 'These ACs can be controlled remotely through smartphones or smart home systems, allowing for precise temperature adjustments and energy savings.',
+            },
+            {
+                name: 'AC',
+                image: 'https://www.91-cdn.com/hub/wp-content/uploads/2023/03/Best-AC-brands-in-India.jpg',
+                price: 3500,
+                description: 'These ACs use heat instead of electricity to create cooling, making them energy-efficient and suitable for specific applications.',
+            },
+            {
+                name: 'WASHING MACHINE',
+                image: 'https://whirlpoolindia.vtexassets.com/arquivos/ids/164386/Xpert-care-Silver-lid-open-O3-6.5kg_1500x1500.jpg',
+                price: 2000,
+                description: ' Top load washers use more water even if their cycles can be faster than that of a front load washer..',
+            },
+            {
+                name: 'WASHING MACHINE',
+                image: 'https://whirlpoolindia.vtexassets.com/arquivos/ids/164386/Xpert-care-Silver-lid-open-O3-6.5kg_1500x1500.jpg',
+                price: 2100,
+                description:'A washing machine is a household appliance that automates the process of cleaning clothes through a combination of water, detergent, and mechanical agitation..',
+            },
+            {
+                name: 'TV',
+                image: 'https://instorestatic.tcl.com/media/catalog/product/0/1/01.png',
+                price: 2100,
+                description:'A TV, or television, is a screen that brings movies, shows, and news into your home with both visuals and sound.',
+            },
+            {
+                name: 'TV',
+                image: 'https://rukminim2.flixcart.com/image/850/1000/xif0q/television/e/y/6/-original-imaghgphqgayhvah.jpeg?q=20',
+                price: 1800,
+                description:'A TV, or television, is an electronic device that displays visual content and broadcasts audio, serving as a primary source of entertainment and information in households worldwide..',
+            },
+            {
+                name: 'JUICER MACHINE',
+                image: 'https://dq3atogbtxhm1.cloudfront.net/Images/Catalogue/20230617065030-c54c9e99-b21b-44d8-ba3d-e3f613f0abed.jpg',
+                price: 1500,
+                description:'A juicer machine extracts fresh and nutritious juices from fruits and vegetables with ease',
+            },
+            {
+                name: 'JUICER MACHINE',
+                image: 'https://m.media-amazon.com/images/I/61FZhS8Oc4L.jpg',
+                price: 2500,
+                description:'A juicer machine effortlessly transforms fruits and vegetables into healthy and refreshing juices',
+            },
+        ];
+
+        // Function to display products
+        function displayProducts() {
+            productRow.innerHTML = ''; // Clear existing products
+
+            const startIndex = currentIndex;
+            const endIndex = Math.min(startIndex + 2, products.length);
+
+            for (let i = startIndex; i < endIndex; i++) {
+                const product = products[i];
+
+                const productCard = document.createElement('div');
+                productCard.classList.add('product-card');
+
+                const productImage = document.createElement('img');
+                productImage.src = product.image;
+                productImage.alt = product.name;
+
+                const productName = document.createElement('h2');
+                productName.textContent = product.name;
+
+                const productPrice = document.createElement('p');
+                productPrice.textContent = `$${product.price.toFixed(2)}`;
+
+                const productDescription = document.createElement('p');
+                productDescription.classList.add('product-description');
+                productDescription.textContent = product.description;
+
+                const buyButton = document.createElement('button');
+                buyButton.textContent = 'Buy';
+                buyButton.classList.add('buy-button'); // Add the buy button style
+                buyButton.addEventListener('click', () => addToCart(product));
+
+                productCard.appendChild(productImage);
+                productCard.appendChild(productName);
+                productCard.appendChild(productPrice);
+                productCard.appendChild(productDescription);
+                productCard.appendChild(buyButton);
+
+                productRow.appendChild(productCard);
+            }
+        }
+
+        // Function to add a product to the cart
+        function addToCart(product) {
+            cart.push(product);
+            updateCart();
+        }
+
+        // Function to remove a product from the cart
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCart();
+        }
+
+        // Function to update the cart
+        function updateCart() {
+            cartItems.innerHTML = ''; // Clear existing cart items
+            let total = 0;
+
+            cart.forEach((product, index) => {
+                const cartItem = document.createElement('li');
+                const removeButton = document.createElement('button');
+                removeButton.textContent = 'Remove';
+                removeButton.classList.add('remove-button');
+                removeButton.addEventListener('click', () => removeFromCart(index));
+
+                cartItem.textContent = `${product.name} - $${product.price.toFixed(2)}`;
+                cartItem.appendChild(removeButton);
+
+                cartItems.appendChild(cartItem);
+
+                total += product.price;
+            });
+
+            cartTotal.textContent = `Total: $${total.toFixed(2)}`;
+
+            // Show the cart
+            shoppingCart.style.display = 'block';
+        }
+
+        // Show/hide the cart when clicking the cart button
+        cartButton.addEventListener('click', () => {
+            if (shoppingCart.style.display === 'block') {
+                shoppingCart.style.display = 'none';
+            } else {
+                shoppingCart.style.display = 'block';
+            }
+        });
+
+        // Handle the "Next" button click
+        document.getElementById('nextButton').addEventListener('click', () => {
+            currentIndex += 2;
+            if (currentIndex >= products.length) {
+                currentIndex = 0;
+            }
+            displayProducts();
+        });
+
+        // Handle the "Previous" button click
+        document.getElementById('prevButton').addEventListener('click', () => {
+            currentIndex -= 2;
+            if (currentIndex < 0) {
+                currentIndex = Math.max(products.length - 2, 0);
+            }
+            displayProducts();
+        });
+
+        // Function to place an order
+        function placeOrder() {
+            const address = document.getElementById('address').value;
+            const phoneNumber = document.getElementById('phoneNumber').value;
+            const fullName = document.getElementById('fullName').value;
+
+            // Check if the cart is not empty and user has entered required information
+            if (cart.length > 0 && address.trim() !== '' && phoneNumber.trim() !== '' && fullName.trim() !== '') {
+                // You can send the order information to a server or perform any other necessary actions here
+                alert(`Order placed!\n\nAddress: ${address}\nPhone Number: ${phoneNumber}\nFull Name: ${fullName}`);
+                
+                // Clear the cart and input fields after placing the order
+                cart = [];
+                updateCart();
+                document.getElementById('address').value = '';
+                document.getElementById('phoneNumber').value = '';
+                document.getElementById('fullName').value = '';
+            } else {
+                alert('Please fill in all the required information and add products to the cart.');
+            }
+        }
+
+        // Add an event listener to the "Place Order" button
+        document.getElementById('placeOrderButton').addEventListener('click', placeOrder);
+
+ // Call the displayProducts function to initially populate the product list
+ displayProducts();
+</script>
+</body>
+</html>

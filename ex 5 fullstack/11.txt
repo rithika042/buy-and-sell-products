@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Leave Management Dashboard</title>
+</head>
+<body>
+    <h1>Leave Management Dashboard</h1>
+    <a href="{{ url_for('add_leave_request') }}">Add Leave Request</a>
+
+    <div>
+        <h2>Login</h2>
+        <a href="{{ url_for('admin_login') }}" class="button">Admin Login</a>
+        <a href="{{ url_for('student_login') }}" class="button">Student Login</a>
+    </div>
+
+    <table border="1">
+        <tr>
+            <th>Name</th>
+            <th>Register No</th>
+            <th>Date</th>
+            <th>No of Days</th>
+            <th>Reason</th>
+        </tr>
+        {% for leave_request in leave_requests %}
+            <tr>
+                <td>{{ leave_request.name }}</td>
+                <td>{{ leave_request.register_no }}</td>
+                <td>{{ leave_request.date }}</td>
+                <td>{{ leave_request.no_of_days }}</td>
+                <td>{{ leave_request.reason }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

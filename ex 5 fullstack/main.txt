@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .center {
+            text-align: center;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+    <title>Product Transaction</title>
+</head>
+<body>
+<div class="center">
+    <button id="buyButton">Buy Product</button>
+    <button id="sellButton">Sell Product</button>
+</div>
+
+<script>
+    // Get references to the buttons
+    const buyButton = document.getElementById('buyButton');
+    const sellButton = document.getElementById('sellButton');
+
+    // Define click event handlers
+    sellButton.addEventListener('click', function () {
+        // Remove the Sell button category
+        sellButton.style.display = 'none';
+
+        // Redirect to the desired page for selling
+        window.location.href = 'final.html'; // Replace 'sell.html' with the page you want to navigate to for selling.
+    });
+
+    buyButton.addEventListener('click', function () {
+        // Redirect to the desired page for buying
+        window.location.href = 'buy.html'; // Replace 'buy.html' with the page you want to navigate to for buying.
+    });<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .center {
+            text-align: center;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+    <title>Product Transaction</title>
+</head>
+<body>
+<div class="center">
+    <button id="buyButton">Buy Product</button>
+    <button id="sellButton">Sell Product</button>
+</div>
+
+<script>
+    // Get references to the buttons
+    const buyButton = document.getElementById('buyButton');
+    const sellButton = document.getElementById('sellButton');
+
+    // Define click event handlers
+    sellButton.addEventListener('click', function () {
+        // Remove the Sell button category
+        sellButton.style.display = 'none';
+
+        // Redirect to the desired page for selling
+        window.location.href = 'sell.html'; // Replace 'sell.html' with the page you want to navigate to for selling.
+    });
+
+    buyButton.addEventListener('click', function () {
+        // Create a container for the sub-buttons
+        const subButtonsContainer = document.createElement('div');
+        subButtonsContainer.className = 'sub-buttons-container';
+
+        // Create sub-buttons for different categories
+        const electronicsButton = createSubButton('Electronics', '11.html');
+        const phonesButton = createSubButton('Phones', '12.html');
+        const furnitureButton = createSubButton('Furniture', '13.html');
+
+        // Append sub-buttons to the container
+        subButtonsContainer.appendChild(electronicsButton);
+        subButtonsContainer.appendChild(booksButton);
+        subButtonsContainer.appendChild(furnitureButton);
+
+        // Append the sub-buttons container to the main button
+        buyButton.appendChild(subButtonsContainer);
+
+        // Function to create a sub-button
+        function createSubButton(label, page) {
+            const subButton = document.createElement('button');
+            subButton.textContent = label;
+            subButton.addEventListener('click', function () {
+                // Redirect to the selected category page
+                window.location.href = page;
+            });
+            return subButton;
+        }
+    });
+</script>
+</body>
+</html>
+
+</script>
+</body>
+</html>
